@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import javafx.util.Pair;
 
 /**
  *
@@ -30,6 +29,7 @@ public class ChatRoom extends Thread {
     }
 
     public void open() {
+        System.out.println("Server started.");
         start();
         while(true){
             try {
@@ -47,15 +47,15 @@ public class ChatRoom extends Thread {
     public void run() {
         while (true) {
             if(!ChatQueue.messages.isEmpty()){
-                Pair<String,String> message = ChatQueue.messages.remove(0);
-                sendMessageToAll(message.getKey(), message.getValue());
+                Message message = ChatQueue.messages.remove(0);
+                sendMessageToAll(message);
             }
         }
     }
     
-    private void sendMessageToAll(String name, String message){
+    private void sendMessageToAll(Message message){
         for(Client client : clients){
-            client.prtStrm.println(name +": "+ message);
+            client.prtStrm.println(message.getName() +": "+ message.getMessage());
         }
     }
 }

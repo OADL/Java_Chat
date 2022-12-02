@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import javafx.util.Pair;
 
 /**
  *
@@ -44,7 +43,7 @@ public class Client extends Thread {
             try {
                 String message = dataIS.readLine();
                 System.out.println(name+": "+ message);
-                ChatQueue.messages.add(new Pair<>(name,message));
+                ChatQueue.messages.add(new Message(name,message));
             } catch (IOException ex) {
                 System.err.println("Couldn't read from client.");
             }

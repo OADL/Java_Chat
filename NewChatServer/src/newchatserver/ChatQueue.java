@@ -6,12 +6,10 @@
 package newchatserver;
 
 import java.util.ArrayList;
-import javafx.util.Pair;
-
 /**
  *
  * @author DELL
  */
 public class ChatQueue {
-    public static ArrayList<Pair<String,String>> messages = new ArrayList<>();
+    public static ArrayList<Message> messages = new ArrayList<>();
 }
