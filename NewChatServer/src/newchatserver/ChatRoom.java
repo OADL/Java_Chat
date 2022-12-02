@@ -41,6 +41,7 @@ public class ChatRoom extends Thread {
                 Client client = new Client(roomCount++,socket);
                 clients.add(client);
                 client.start();
+                sendBroadcast(client.getClientName()+" joined the party.");
             } catch (IOException exception) {
                 System.err.println("Couldn't connect to client.");
             }
@@ -64,6 +65,11 @@ public class ChatRoom extends Thread {
         for(Client client : clients){
             if(message.getId() != client.getClientId())
                 client.sendMessage(message.getName() +": "+ message.getMessage());
+        }
+    }
+    private void sendBroadcast(String string){
+        for(Client client : clients){
+            client.sendMessage(string);
         }
     }
 }

@@ -29,10 +29,13 @@ public class Client extends Thread {
             prtStrm = new PrintStream(socket.getOutputStream());
             name = dataIS.readLine();
             System.out.println(name + " is added to server.");
-            prtStrm.println("Hi "+ name + ".");
         } catch (IOException exception) {
             System.err.println("Couldn't initialize client.");
         }
+    }
+
+    public String getClientName() {
+        return name;
     }
 
     public int getClientId() {
