@@ -14,10 +14,11 @@ import java.io.PrintStream;
  * @author DELL
  */
 public class Receiver extends Thread {
-    
+    String name;
     DataInputStream dataIS;
 
-    public Receiver(DataInputStream dataIS){
+    public Receiver(String name, DataInputStream dataIS){
+        this.name = name;
         this.dataIS = dataIS;
     }
     
@@ -27,6 +28,7 @@ public class Receiver extends Thread {
             try {
                 String message = dataIS.readLine();
                 System.out.println(message);
+                System.out.print(this.name + ": \r");
             } catch (IOException exception) {
                 System.err.println("Couldn't receiver message.");
             }  

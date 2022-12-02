@@ -15,13 +15,15 @@ import java.net.Socket;
  * @author DELL
  */
 public class Client extends Thread {
-    Socket socket;
-    DataInputStream dataIS;
-    PrintStream prtStrm;
-    String name;
+    private int id;
+    private Socket socket;
+    private DataInputStream dataIS;
+    private PrintStream prtStrm;
+    private String name;
     
-    public Client(Socket socket) {
+    public Client(int id, Socket socket) {
         try {
+            this.id = id;
             this.socket = socket;
             dataIS = new DataInputStream(socket.getInputStream());
             prtStrm = new PrintStream(socket.getOutputStream());
@@ -32,21 +34,32 @@ public class Client extends Thread {
             System.err.println("Couldn't initialize client.");
         }
     }
-    
+
+    public int getClientId() {
+        return id;
+    }
+
     public boolean isClosed() {
         return this.socket.isClosed();
     }
     
     @Override
     public void run(){
-        while(true){
-            try {
+        try {
+            while(true){
                 String message = dataIS.readLine();
                 System.out.println(name+": "+ message);
-                ChatQueue.messages.add(new Message(name,message));
-            } catch (IOException ex) {
-                System.err.println("Couldn't read from client.");
+                ChatQueue.messages.add(new Message(id,name,message));
             }
+        } catch (IOException ex) {
+            System.err.println("Client "+ this.name + " is disconnected.");
+            interrupt();
+        }
+    }
+
+    public void sendMessage(String message) {
+        if(isAlive()){
+            this.prtStrm.println(message);
         }
     }
 }

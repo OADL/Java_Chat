@@ -5,10 +5,13 @@
  */
 package newchatserver;
 
+import sun.rmi.runtime.Log;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,7 +20,8 @@ import java.util.ArrayList;
 public class ChatRoom extends Thread {
     ServerSocket serverSocket;
     ArrayList<Client> clients;
-    
+    private int roomCount = 0;
+
     public ChatRoom() {
         try{
             serverSocket = new ServerSocket(8080); 
@@ -34,7 +38,7 @@ public class ChatRoom extends Thread {
         while(true){
             try {
                 Socket socket = serverSocket.accept();
-                Client client = new Client(socket);
+                Client client = new Client(roomCount++,socket);
                 clients.add(client);
                 client.start();
             } catch (IOException exception) {
@@ -50,12 +54,16 @@ public class ChatRoom extends Thread {
                 Message message = ChatQueue.messages.remove(0);
                 sendMessageToAll(message);
             }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {}
         }
     }
     
     private void sendMessageToAll(Message message){
         for(Client client : clients){
-            client.prtStrm.println(message.getName() +": "+ message.getMessage());
+            if(message.getId() != client.getClientId())
+                client.sendMessage(message.getName() +": "+ message.getMessage());
         }
     }
 }

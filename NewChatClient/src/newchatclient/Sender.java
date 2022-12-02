@@ -27,12 +27,30 @@ public class Sender extends Thread {
 
     @Override
     public void run() {
-        Scanner reader = new Scanner(System.in);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         while(true) {
-            System.out.print(this.name + ": \r");
-            if (reader.hasNext()) {
-                prtStrm.println(reader.next().trim());
+            try {
+                System.out.print(this.name + ": \r");
+                String message = reader.readLine().trim();
+                prtStrm.println(message);
+            } catch (IOException exception) {
+                System.err.println("Couldn't send message.");
             }
         }
     }
+
+//    @Override
+//    public void run() {
+//        Scanner reader = new Scanner(System.in);
+//        StringBuilder message = new StringBuilder();
+//        while(true) {
+//            System.out.print(this.name + ": \r");
+//            if (reader.hasNext()) {
+//                message.append(reader.next()).append(" ");
+//            } else if(message.length()>0) {
+//                prtStrm.println(message);
+//                message = new StringBuilder();
+//            }
+//        }
+//    }
 }
